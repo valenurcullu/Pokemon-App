@@ -1,7 +1,6 @@
-const {Router} = require("express");
 const axios = require ("axios");
 //const Pokemon = require("../models/Pokemon");
-const {Pokemon,Types} = require('../db.js')
+const {Pokemon,Type} = require('../../db.js')
 
 
 const apiData = async ()=>{
@@ -31,25 +30,29 @@ const apiData = async ()=>{
     return pokemonInfo;
 }
 
+
 const dbInfo = async ()=>{
     return await Pokemon.findAll({
         include: {
-            model: Types,
+            model: Type,
             attributes: ['name'],
             through :{
-                attributes:[]
-            }
+                attributes:[],
+            },
         }
     })
+    
 }
+
 
 const infoComplete = async ()=>{
     const apiInfo = await apiData();
     const dbData = await dbInfo();
     const totalData = apiInfo.concat(dbData);
-    console.log(totalData)
+    
     return totalData
 }
-infoComplete()
 
-module.exports = {};
+
+
+module.exports = {apiData,dbInfo,infoComplete};
